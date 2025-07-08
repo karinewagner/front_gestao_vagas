@@ -28,7 +28,7 @@ public class CandidateController {
         try {
             this.candidateService.login(username, password);
             
-            return "/candidate/profile";
+            return "candidate/profile";
 
         } catch (HttpClientErrorException e) {
             
@@ -36,6 +36,10 @@ public class CandidateController {
             
             return "redirect:/candidate/login";
         }
+    }
 
+    @GetMapping("/profile")
+    public String profile() {
+        return "candidate/profile";
     }
 }
