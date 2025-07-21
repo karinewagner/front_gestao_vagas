@@ -18,20 +18,27 @@
         </div>
     </nav>
 
-    <div class="flex px-40 py-20 text-white justify-center">
-        <div class="gird bg-gray-800 w-6/12 colmns-1 grid-cols-1 p-10 rounded justify-between gap-4">
-            <div class="justify-between w-full">
-                <span class="text-base text-gray-300 font-bold">Nome</span>
-                <span class="text-base text-gray-300"></span>
-            </div>
-            <div class="justify-between w-full">
-                <span class="text-base text-gray-300 font-bold">Usuário</span>
-                <span class="text-base text-gray-300"></span>
-            </div>
-            <div class="justify-between w-full">
-                <span class="text-base text-gray-300 font-bold">Email</span>
-                <span class="text-base text-gray-300"></span>
-            </div>
+    <div class="container mx-auto mt-8">
+        <div class="bg-gray-800 p-8 rounded-lg shandow-md">
+
+            <h1 th:text="${user.name}" class="text-2xl front-bold text-gray-100 text-center mb-8"></h1>
+
+            <form th:object="${user}">
+                <div class="text-center mb-4">
+                    <p class="text-gray-400">
+                        <span class="font-bold"> Usuário: </span> 
+                        <span th:text="${user.username}"></span>
+                    </p>
+                    <p class="text-gray-400">
+                        <span class="font-bold"> E-mail: </span>
+                        <span th:text="${user.email}"></span>
+                    </p>
+                    <p class="text-gray-400">
+                        <span class="font-bold"> Descrição: </span>
+                        <span th:text="${user.description}"></span>
+                    </p>
+                </div>
+            </form>
         </div>
     </div>
 </body>
