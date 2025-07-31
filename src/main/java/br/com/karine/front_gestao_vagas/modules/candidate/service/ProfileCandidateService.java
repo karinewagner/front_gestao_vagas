@@ -28,7 +28,5 @@ public class ProfileCandidateService {
         } catch (Exception e) {
             throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
         }
-
-
     }
 }
