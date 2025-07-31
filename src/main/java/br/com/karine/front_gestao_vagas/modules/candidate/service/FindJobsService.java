@@ -1,6 +1,5 @@
 package br.com.karine.front_gestao_vagas.modules.candidate.service;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
 
