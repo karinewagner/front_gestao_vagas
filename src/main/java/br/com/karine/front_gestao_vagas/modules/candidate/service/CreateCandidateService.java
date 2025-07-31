@@ -11,7 +11,7 @@ import br.com.karine.front_gestao_vagas.modules.candidate.dto.CreateCandidateDTO
 @Service
 public class CreateCandidateService {
 
-    public void execute(CreateCandidateDTO createCandidateDTO) {
+    public String execute(CreateCandidateDTO createCandidateDTO) {
 
         RestTemplate rt = new RestTemplate();
 
@@ -20,7 +20,6 @@ public class CreateCandidateService {
 
         HttpEntity<CreateCandidateDTO> request = new HttpEntity<>(createCandidateDTO, headers);
 
-        var result = rt.postForObject("http://localhost:8080/candidate/", request, String.class);
-        System.out.println("Candidate created: " + result);
+        return rt.postForObject("http://localhost:8080/candidate/", request, String.class);
     }
 }
