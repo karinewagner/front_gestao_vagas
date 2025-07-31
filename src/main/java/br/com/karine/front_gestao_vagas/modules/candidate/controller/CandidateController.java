@@ -125,16 +125,16 @@ public class CandidateController {
     }
 
     @PostMapping("/create")
-    public String save(Model model, CreateCandidateDTO candidate) {
+    public String save(Model model, CreateCandidateDTO createCandidateDTO) {
 
         try {
-            this.createCandidateService.execute(candidate);
+            this.createCandidateService.execute(createCandidateDTO);
         } catch (HttpClientErrorException e) {
             model.addAttribute("error_message", FormatErrorMessage.formatErrorMessage(e.getResponseBodyAsString()));
         }
 
 
-        model.addAttribute("candidate", candidate);
+        model.addAttribute("candidate", createCandidateDTO);
 
         return "candidate/create";
     }
