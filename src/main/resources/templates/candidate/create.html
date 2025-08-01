@@ -7,7 +7,7 @@
     <title>Cadastro do candidato</title>
 </head>
 <body class="bg-gray-900 h-screen flex items-center justify-center">
-    <form id="submitForm" action="" class="flex gap-24" th:action="@{/candidate/create}" method="post" th:object="${candidate}">
+    <form id="submitForm" class="flex gap-24" th:action="@{/candidate/create}" method="post" th:object="${candidate}">
 
         <div class="space-y-8 bg-zinc-950 rounded-md p-20">
             <p class="text-white">Candidato, crie o seu cadastro gratuitamente!</p>
