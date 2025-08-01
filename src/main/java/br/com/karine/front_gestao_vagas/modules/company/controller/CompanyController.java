@@ -1,7 +1,9 @@
 package br.com.karine.front_gestao_vagas.modules.company.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,8 +16,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.karine.front_gestao_vagas.modules.company.dto.CreateCompanyDTO;
+import br.com.karine.front_gestao_vagas.modules.company.dto.CreateJobsDTO;
 import br.com.karine.front_gestao_vagas.modules.company.service.CompanyService;
 import br.com.karine.front_gestao_vagas.modules.company.service.CreateCompanyService;
+import br.com.karine.front_gestao_vagas.modules.company.service.CreateJobService;
 import br.com.karine.front_gestao_vagas.utils.FormatErrorMessage;
 import jakarta.servlet.http.HttpSession;
 
@@ -28,6 +32,9 @@ public class CompanyController {
 
     @Autowired
     private CreateCompanyService createCompanyService;
+
+    @Autowired
+    private CreateJobService createJobService;
 
     @GetMapping("/login")
     public String login(Model model) {
@@ -77,5 +84,25 @@ public class CompanyController {
         }
 
         return "company/login";
+    }
+
+    @GetMapping("/jobs")
+    @PreAuthorize("hasRole('COMPANY')")
+    public String jobs(Model model) {
+        model.addAttribute("jobs", new CreateJobsDTO());
+        return "company/jobs";
+    }
+
+    @PostMapping("/jobs")
+    @PreAuthorize("hasRole('COMPANY')")
+    public String createJobs(Model model, CreateJobsDTO createJobsDTO) {
+
+        this.createJobService.execute(createJobsDTO, getToken());
+        return "redirect:/company/jobs";
+    }
+
+        private String getToken() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getDetails().toString();
     }
 }
