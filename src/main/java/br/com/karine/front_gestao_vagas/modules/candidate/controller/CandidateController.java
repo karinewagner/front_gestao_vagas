@@ -35,6 +35,9 @@ public class CandidateController {
     private CandidateService candidateService;
 
     @Autowired
+    private CreateCandidateService createCandidateService;
+
+    @Autowired
     private ProfileCandidateService profileCandidateService;
 
     @Autowired
@@ -43,8 +46,7 @@ public class CandidateController {
     @Autowired
     private ApplyJobService applyJobService;
 
-    @Autowired
-    private CreateCandidateService createCandidateService;
+
     
     @GetMapping("/login")
     public String login() {
@@ -74,6 +76,27 @@ public class CandidateController {
             
             return "redirect:/candidate/login";
         }
+    }
+
+    @GetMapping("/create")
+    public String create(Model model) {
+        model.addAttribute("candidate", new CreateCandidateDTO());
+        return "candidate/create";
+    }
+
+    @PostMapping("/create")
+    public String save(Model model, CreateCandidateDTO createCandidateDTO) {
+
+        try {
+            this.createCandidateService.execute(createCandidateDTO);
+        } catch (HttpClientErrorException e) {
+            model.addAttribute("error_message", FormatErrorMessage.formatErrorMessage(e.getResponseBodyAsString()));
+        }
+
+
+        model.addAttribute("candidate", createCandidateDTO);
+
+        return "candidate/create";
     }
 
     @GetMapping("/profile")
@@ -111,32 +134,9 @@ public class CandidateController {
     @PostMapping("/job/apply")
     @PreAuthorize("hasRole('CANDIDATE')")
     public String applyJob(@RequestParam("jobId") UUID jobId) {
-        System.out.println("Applying for job with ID: " + jobId);
-
+        
         this.applyJobService.execute(getToken(), jobId);
-
         return "redirect:/candidate/jobs";
-    }
-
-    @GetMapping("/create")
-    public String create(Model model) {
-        model.addAttribute("candidate", new CreateCandidateDTO());
-        return "candidate/create";
-    }
-
-    @PostMapping("/create")
-    public String save(Model model, CreateCandidateDTO createCandidateDTO) {
-
-        try {
-            this.createCandidateService.execute(createCandidateDTO);
-        } catch (HttpClientErrorException e) {
-            model.addAttribute("error_message", FormatErrorMessage.formatErrorMessage(e.getResponseBodyAsString()));
-        }
-
-
-        model.addAttribute("candidate", createCandidateDTO);
-
-        return "candidate/create";
     }
 
     private String getToken() {
