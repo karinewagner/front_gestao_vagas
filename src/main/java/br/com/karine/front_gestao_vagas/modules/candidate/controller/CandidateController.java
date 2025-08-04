@@ -93,10 +93,9 @@ public class CandidateController {
             model.addAttribute("error_message", FormatErrorMessage.formatErrorMessage(e.getResponseBodyAsString()));
         }
 
-
         model.addAttribute("candidate", createCandidateDTO);
 
-        return "candidate/create";
+        return "redirect:/candidate/login";
     }
 
     @GetMapping("/profile")
@@ -137,6 +136,20 @@ public class CandidateController {
         
         this.applyJobService.execute(getToken(), jobId);
         return "redirect:/candidate/jobs";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        
+        SecurityContextHolder.getContext().setAuthentication(null);
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+        session.setAttribute("token", null);
+        
+        session.invalidate();
+        SecurityContextHolder.clearContext();
+
+        return "redirect:/candidate/login";
     }
 
     private String getToken() {
