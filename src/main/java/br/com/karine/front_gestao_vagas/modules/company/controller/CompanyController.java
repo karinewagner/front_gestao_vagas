@@ -20,6 +20,7 @@ import br.com.karine.front_gestao_vagas.modules.company.dto.CreateJobsDTO;
 import br.com.karine.front_gestao_vagas.modules.company.service.CompanyService;
 import br.com.karine.front_gestao_vagas.modules.company.service.CreateCompanyService;
 import br.com.karine.front_gestao_vagas.modules.company.service.CreateJobService;
+import br.com.karine.front_gestao_vagas.modules.company.service.ListAllJobsCompanyService;
 import br.com.karine.front_gestao_vagas.utils.FormatErrorMessage;
 import jakarta.servlet.http.HttpSession;
 
@@ -35,6 +36,9 @@ public class CompanyController {
 
     @Autowired
     private CreateJobService createJobService;
+
+    @Autowired
+    private ListAllJobsCompanyService listAllJobsCompanyService;
 
     @GetMapping("/login")
     public String login(Model model) {
@@ -76,14 +80,13 @@ public class CompanyController {
     public String save(Model model, CreateCompanyDTO company) {
         try {
             this.createCompanyService.execute(company);
+            model.addAttribute("company", new CreateCompanyDTO());
         } catch (HttpClientErrorException e) {
             model.addAttribute("error_message", 
                 FormatErrorMessage.formatErrorMessage(e.getResponseBodyAsString()));
             model.addAttribute("company", company);
-            return "company/create";
         }
-
-        return "company/login";
+        return "redirect:/company/login";
     }
 
     @GetMapping("/jobs")
@@ -98,10 +101,21 @@ public class CompanyController {
     public String createJobs(Model model, CreateJobsDTO createJobsDTO) {
 
         this.createJobService.execute(createJobsDTO, getToken());
-        return "redirect:/company/jobs";
+        return "redirect:/company/jobs/list";
     }
 
-        private String getToken() {
+    @GetMapping("/jobs/list")
+    @PreAuthorize("hasRole('COMPANY')")
+    public String list(Model model) {
+        
+        var result = this.listAllJobsCompanyService.execute(getToken());
+
+        model.addAttribute("jobs", result);
+
+        return "company/list";
+    }
+
+    private String getToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getDetails().toString();
     }
